@@ -12,7 +12,13 @@ import { useCreateOrEditRecord } from '../../hooks/useCreateOrEditRecord'
 import { useTranslation } from '../../hooks/useTranslation'
 import { ButtonCreate } from '../../lib-react-components'
 
-export const EmptyCollectionView = () => {
+/**
+ * @param {{
+ *  selectedFolder?: string
+ *  isFavoritesView?: boolean
+ * }} props
+ */
+export const EmptyCollectionView = ({ selectedFolder, isFavoritesView }) => {
   const { data } = useRouter()
   const { t } = useTranslation()
   const { handleCreateOrEditRecord } = useCreateOrEditRecord()
@@ -48,9 +54,14 @@ export const EmptyCollectionView = () => {
             (option) => html`
               <${ButtonCreate}
                 key=${option.type}
+                testId=${`emptycollection-button-create-${option.type}`}
                 startIcon=${RECORD_ICON_BY_TYPE[option.type]}
                 onClick=${() =>
-                  handleCreateOrEditRecord({ recordType: option.type })}
+                  handleCreateOrEditRecord({
+                    recordType: option.type,
+                    selectedFolder,
+                    isFavorite: isFavoritesView ? true : undefined
+                  })}
               >
                 ${option.text}
               <//>

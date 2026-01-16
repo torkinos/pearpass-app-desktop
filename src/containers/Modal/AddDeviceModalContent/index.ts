@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import type { ClipboardEvent } from 'react'
 
 import { html } from 'htm/react'
-import { useCountDown } from 'pear-apps-lib-ui-react-hooks'
 import { generateQRCodeSVG } from 'pear-apps-utils-qr'
 import { colors } from 'pearpass-lib-ui-theme-provider'
 import {
@@ -13,7 +12,6 @@ import {
   useVault,
   usePair
 } from 'pearpass-lib-vault'
-
 import { InputFieldWrapper } from './styles'
 import { PasteIconWrapper } from './styles'
 import {
@@ -21,7 +19,6 @@ import {
   Content,
   CopyText,
   ExpireText,
-  ExpireTime,
   HeaderTitle,
   PairTabs,
   PairTab,
@@ -49,6 +46,7 @@ import { InputField } from '../../../lib-react-components/components/InputField'
 import { PasteIcon } from '../../../lib-react-components/icons/PasteIcon'
 import { ModalContent } from '../ModalContent'
 import { VaultPasswordFormModalContent } from '../VaultPasswordFormModalContent'
+import { ScanQRExpireTimer } from './ScanQRExpireTimer'
 
 export const AddDeviceModalContent = () => {
   const { t } = useTranslation()
@@ -180,15 +178,6 @@ export const AddDeviceModalContent = () => {
     }
   }
 
-  const ScanQRExpireTimer = () => {
-    const expireTime = useCountDown({
-      initialSeconds: 120,
-      onFinish: closeModal
-    })
-
-    return html`<${ExpireTime}> ${expireTime} <//>`
-  }
-
   return html`
     <${ModalContent}
       onClose=${closeModal}
@@ -223,13 +212,13 @@ export const AddDeviceModalContent = () => {
             $active=${!scanQRStep}
             onClick=${() => setScanQRStep(false)}
           >
-            ${t('Load a vault')}
+            ${t('Import vault')}
           <//>
         <//>
         ${scanQRStep
           ? html`
               <${QRCodeSection}>
-                <${QRCodeText}> ${t('Scan this QR code')} <//>
+                <${QRCodeText}> ${t('Scan this QR code while in the PearPass App')} <//>
 
                 <${QRCode}
                   style=${{ width: '200px', height: '200px' }}
@@ -239,7 +228,7 @@ export const AddDeviceModalContent = () => {
 
               <${BackgroundSection}>
                 <${ExpireText}>
-                  ${t('This link will expire in')}
+                  ${t('Expires in')}
                   <${ScanQRExpireTimer} />
                 <//>
 
@@ -260,7 +249,7 @@ export const AddDeviceModalContent = () => {
                 <${QRCodeCopyWrapper}>
                   <${QRCodeCopy}>
                     <${QRCodeText}>
-                      ${t('Copy this vault key to your device')}
+                      ${t('Copy vault key')}
                     <//>
                     <${CopyIcon} color=${colors.primary400.mode1} />
                   <//>
@@ -272,7 +261,7 @@ export const AddDeviceModalContent = () => {
 
               <${AlertBox}
                 message=${t(
-                  'Caution: You’re generating a secure invitation to sync another device with your vault. Treat this invite with the same confidentiality as your password.'
+                  'Keep this code private. Anyone with it can connect a device to your vault.'
                 )}
               />
             `

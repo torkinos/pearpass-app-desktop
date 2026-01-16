@@ -11,7 +11,7 @@ import {
   getMasterEncryption
 } from 'pearpass-lib-vault'
 
-import { ActionsContainer, ContentContainer, Description } from './styles'
+import { ActionsContainer, ContentContainer } from './styles'
 import { handleExportCSVPerVault } from './utils/exportCsvPerVault'
 import { handleExportJsonPerVaultTest } from './utils/exportJsonPerVault'
 import { AlertBox } from '../../../components/AlertBox/index.js'
@@ -26,6 +26,7 @@ import { VaultPasswordFormModalContent } from '../../../containers/Modal/VaultPa
 import { useModal } from '../../../context/ModalContext'
 import { useTranslation } from '../../../hooks/useTranslation.js'
 import { ButtonSecondary } from '../../../lib-react-components'
+import { sortByName } from '../../../utils/sortByName'
 import { vaultCreatedFormat } from '../../../utils/vaultCreated'
 
 export const ExportTab = () => {
@@ -176,12 +177,7 @@ export const ExportTab = () => {
 
   return html` <${CardSingleSetting} title=${t('Export')}>
     <${ContentContainer}>
-      <${Description}>
-        ${t(
-          'Choose which Vaults do you want to backup and select if you want the file encrypted'
-        )}
-      <//>
-      ${data?.map(
+      ${sortByName(data).map(
         (vault) =>
           html`<${ListItem}
             key=${vault.name}
